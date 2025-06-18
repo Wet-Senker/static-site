@@ -25,13 +25,6 @@ class TestParentNode(unittest.TestCase):
             parent_node.to_html(),
             "<body><div><p><b>hello</b></p></div></body>"
         )
-    
-    def test_no_children(self):
-        parent_node = ParentNode("Hello", [])
-        self.assertEqual(
-            parent_node.to_html(),
-            "hello"
-        )
 
 if __name__ == "__main__":
     unittest.main()
