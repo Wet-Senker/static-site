@@ -25,6 +25,15 @@ class TestParentNode(unittest.TestCase):
             parent_node.to_html(),
             "<body><div><p><b>hello</b></p></div></body>"
         )
+    
+    def test_no_tag(self):
+        child_node = LeafNode("b")
+        parent_node = ParentNode("", [child_node])
+        with self.assertRaises(ValueError) as context:
+            parent_node.to_html()
+            self.assertEqual(str(context.exception),
+            "ParentNode must have a tag."
+        )
 
 if __name__ == "__main__":
     unittest.main()
