@@ -1,10 +1,36 @@
 import unittest
 from inline_markdown import (
     split_nodes_delimiter,
+    extract_markdown_images,
+    extract_markdown_links,
 )
 
 from textnode import TextNode, TextType
 
+class TestExtractMarkdown(unittest.TestCase):
+    def test_extract_markdown_images(self):
+        matches = extract_markdown_images(
+            "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png)"
+        )
+        self.assertListEqual([("image", "https://i.imgur.com/zjjcJKZ.png")], matches)
+
+    def test_extract_markdown_links(self):
+        matches = extract_markdown_links(
+            "This is text with a link [linkname](https://brugnieuws.nl)"
+        )
+        self.assertListEqual([("linkname", "https://brugnieuws.nl")], matches)
+    
+    def test_multiple_markdown_images(self):
+        matches = extract_markdown_images(
+            "This is a text with two images. The first one is ![image1](https://image1.png), the second one is ![image2](https://image2.png)"
+        )
+        self.assertListEqual([("image1", "https://image1.png"), ("image2", "https://image2.png")], matches)
+
+    def test_multiple_markdown_links(self):
+        matches = extract_markdown_links(
+            "This is a text with two links. The first one is [link1](https://site1.com), the second one is [link2](https://site2.com)"
+        )
+        self.assertListEqual([("link1", "https://site1.com"), ("link2", "https://site2.com")], matches)
 
 class TestInlineMarkdown(unittest.TestCase):
     def test_delim_bold(self):

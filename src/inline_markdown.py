@@ -27,6 +27,6 @@ def extract_markdown_images(text):
     return matches
 
 def extract_markdown_links(text):
-    pattern = r"!\[([^\[\]]*)\]\(([^\(\)]*)\)" # I need to make it in a way it doesn't capture the !.
+    pattern = r"(?<!\!)\[([^\[\]]*)\]\(([^\(\)]*)\)"
     matches = re.findall(pattern, text) 
     return matches
