@@ -1,11 +1,54 @@
 import unittest
 from inline_markdown import (
+    split_nodes_image,
+    split_nodes_link,
     split_nodes_delimiter,
     extract_markdown_images,
     extract_markdown_links,
 )
 
 from textnode import TextNode, TextType
+
+class TestSplitNodesImages(unittest.TestCase):
+    def test_extract_one_link(self):
+        node = TextNode("This is text with an image ![funny cat](https://www.boot.dev)", TextType.TEXT)
+        new_node = split_nodes_image([node])
+        self.assertListEqual(
+            [
+            TextNode("This is text with an image ", TextType.TEXT),
+            TextNode("funny cat", TextType.IMAGE, "https://www.boot.dev"),
+        ],
+            new_node)
+
+class TestSplitNodesLinks(unittest.TestCase):
+    def test_extract_one_link(self):
+        node = TextNode("This is text with a link [to boot dev](https://www.boot.dev)", TextType.TEXT)
+        new_node = split_nodes_link([node])
+        self.assertListEqual(
+            [
+            TextNode("This is text with a link ", TextType.TEXT),
+            TextNode("to boot dev", TextType.LINK, "https://www.boot.dev"),
+        ],
+            new_node)
+
+    def test_extract_two_links(self):
+        node = TextNode(
+        "This is text with a [link](https://www.boot.dev.com) and another [second link](https://www.brugnieuws.nl)!",
+        TextType.TEXT,
+    )
+        new_nodes = split_nodes_link([node])
+        self.assertListEqual(
+        [
+            TextNode("This is text with a ", TextType.TEXT),
+            TextNode("link", TextType.LINK, "https://www.boot.dev.com"),
+            TextNode(" and another ", TextType.TEXT),
+            TextNode(
+                "second link", TextType.LINK, "https://www.brugnieuws.nl"
+            ),
+            TextNode("!", TextType.TEXT),
+        ],
+        new_nodes,
+    )
 
 class TestExtractMarkdown(unittest.TestCase):
     def test_extract_markdown_images(self):
