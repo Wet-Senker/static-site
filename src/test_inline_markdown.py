@@ -5,9 +5,46 @@ from inline_markdown import (
     split_nodes_delimiter,
     extract_markdown_images,
     extract_markdown_links,
+    text_to_textnodes
 )
 
 from textnode import TextNode, TextType
+
+class TestTextToNodes(unittest.TestCase):
+    def test_bold_only(self):
+        new_nodes = text_to_textnodes("This text contains **bold** words.")
+        self.assertListEqual(
+            [
+                TextNode("This text contains ", TextType.TEXT),
+                TextNode("bold", TextType.BOLD),
+                TextNode(" words.", TextType.TEXT)
+            ], 
+            new_nodes)
+
+    def test_multiple_bold(self):
+        new_nodes = text_to_textnodes("This **text** contains two **bold** words.")
+        self.assertListEqual(
+            [
+                TextNode("This ", TextType.TEXT),
+                TextNode("text", TextType.BOLD),
+                TextNode(" contains two ", TextType.TEXT),
+                TextNode("bold", TextType.BOLD),
+                TextNode(" words.", TextType.TEXT),
+            ],
+            new_nodes
+        )
+    
+    def test_link_and_bold(self):
+        new_nodes = text_to_textnodes("This **text** contains a link [linkname](https://www.brugnieuws.nl)")
+        self.assertListEqual(
+            [
+                TextNode("This ", TextType.TEXT),
+                TextNode("text", TextType.BOLD),
+                TextNode(" contains a link ", TextType.TEXT),
+                TextNode("linkname", TextType.LINK, "https://www.brugnieuws.nl"), 
+            ],
+            new_nodes
+        )
 
 class TestSplitNodesImages(unittest.TestCase):
     def test_extract_one_link(self):
