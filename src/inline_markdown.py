@@ -74,12 +74,10 @@ def split_nodes_link(old_nodes):
             new_nodes.append(TextNode(original_text, TextType.TEXT))
     return new_nodes
 
-
 def extract_markdown_images(text):
     pattern = r"!\[([^\[\]]*)\]\(([^\(\)]*)\)"
     matches = re.findall(pattern, text)
     return matches
-
 
 def extract_markdown_links(text):
     pattern = r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)"
@@ -92,5 +90,4 @@ def text_to_textnodes(text):
     split_code = split_nodes_delimiter(first_splits, "`", TextType.CODE)
     split_bold = split_nodes_delimiter(split_code, "**", TextType.BOLD)
     nodes = split_nodes_delimiter(split_bold, "__", TextType.ITALIC)
-    
     return nodes

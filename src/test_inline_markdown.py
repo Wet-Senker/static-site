@@ -5,10 +5,16 @@ from inline_markdown import (
     split_nodes_delimiter,
     extract_markdown_images,
     extract_markdown_links,
-    text_to_textnodes
+    text_to_textnodes,
+    markdown_to_html_node
 )
 
 from textnode import TextNode, TextType
+
+class TestMarkdownToHtml(unittest.TestCase):
+    def test_pass(self):
+        type = markdown_to_html_node("**bold**")
+        self.assertEqual(type, TextType.BOLD) 
 
 class TestTextToNodes(unittest.TestCase):
     def test_bold_only(self):
